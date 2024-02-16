@@ -9,26 +9,51 @@ export const styles = StyleSheet.create({
     input: {
         height:  40,
         borderColor: 'gray',
-        borderWidth:  1,
-        marginBottom:  10,
+        borderWidth:  2,
+        marginBottom:  5,
         paddingLeft:  10,
+        backgroundColor: "#3E8989",
+        borderRadius: 15,
+        color: "white"
     },
     text: {
-        fontSize:  16,
-        marginBottom:  10,
+        fontSize:  17,
         textAlign: "center",
-        margin: "auto"
+        margin: "auto",
+        fontFamily: "QuattrocentoSans_400Regular",
+        color: "white"
     },
-    meteoBox: {
-        backgroundColor: "#a8ecff",
-        width: 250,
+    boxTitle: {
+        fontSize: 25,
+        fontWeight: "bold",
+        margin: 0,
+        marginBottom: 10,
+        fontFamily: "Oswald_600SemiBold",
+        color: "#B2F7EF",
+        textDecorationLine: "underline"
+    },
+    box: {
+        backgroundColor: "#3E8989",
+        width: 170,
         textAlign: "center",
-        height: 280
+        borderColor: 'gray',
+        borderWidth:  2,
+        borderRadius: 10
     },
-    now: {
+    actual: {
+        height: 70,
         marginLeft: "auto",
+        marginRight: "auto",
+        marginBottom: 10,
+        marginTop: 10
     },
     forecasts: {
+        height: 290,
+    },
+    hours: {
+        marginLeft: "auto",
+    },
+    days: {
         marginRight: "auto",
     },
     scrollView: {
@@ -40,22 +65,23 @@ export const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyItems: "center",
-        gap: 50
+        gap: 20
     },
     button: {
-        backgroundColor: "#a8ecff",
-        padding: 10,
+        backgroundColor: "#3E8989",
+        padding: 5,
         marginLeft: "auto",
         marginRight: "auto",
-        marginTop: 10,
-        marginBottom: 10,
+        marginTop: 5,
+        marginBottom: 5,
         justifyContent: 'center', //Centered vertically
         alignItems: 'center', //Centered horizontally,
-        height: 25,
+        height: "fit-content",
         width: "fit-content",
         borderRadius: 5
     },
     buttonText: {
-        height: 15
-    }
+        minHeight: 15,
+        maxHeight: 20
+    },
 });

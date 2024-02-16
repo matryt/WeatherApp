@@ -1,5 +1,7 @@
 import { Alert } from "react-native";
 
+const apiKey = "00031a65b49791c459322c0656fc6202"
+
 const roundTemp = (temp) => {
     let trunc = Math.trunc(temp);
     if (temp - trunc < 0.5) {
@@ -8,9 +10,8 @@ const roundTemp = (temp) => {
     return trunc + 0.5;
 }
 
-export const getWeather = async (city, setWeatherData, setForecastData) => {
+export const getWeather = async (city, setWeatherData) => {
     try {
-        const apiKey = '00031a65b49791c459322c0656fc6202'; // Remplacez par votre clé API d'OpenWeatherMap
         const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&lang=fr`;
 
         const response = await fetch(apiUrl);
@@ -30,10 +31,11 @@ export const getWeather = async (city, setWeatherData, setForecastData) => {
     }
 };
 
-export const getForecast = async (city, setWeatherData, setForecastData) => {
+export const getHourlyForecast = async (city, setForecastData) => {
+    let hoursRemaining = 23 - new Date().getUTCHours();
+    let count = Math.round(hoursRemaining / 3);
     try {
-        const apiKey = '00031a65b49791c459322c0656fc6202'; // Remplacez par votre clé API d'OpenWeatherMap
-        const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&lang=fr`;
+        const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&lang=fr&cnt=${count}`;
 
         const response = await fetch(apiUrl);
         const data = await response.json();
@@ -41,8 +43,7 @@ export const getForecast = async (city, setWeatherData, setForecastData) => {
         if (data.cod && data.cod !== '200') {
             throw new Error(data.message || 'Échec de la récupération des prévisions');
         }
-
-        const forecast = data.list.slice(0,  3); // Obtenez les prévisions pour les prochaines heures
+        let forecast = data.list
         for (let i = 0; i < forecast.length; i++) {
             forecast[i].main.temp = roundTemp(forecast[i].main.temp - 273.15);
         }
@@ -53,3 +54,12 @@ export const getForecast = async (city, setWeatherData, setForecastData) => {
         Alert.alert('Erreur', 'Échec de la récupération des prévisions. Veuillez réessayer.');
     }
 };
+
+export const getDailyForecast = async (city, setDailyForecastData) => {
+    try {
+        const apiUrl = "https://api.openweathermap.org/data/2.5/forecast/daily"
+    } catch (error) {
+        console.error('Erreur lors de la récupération des prévisions:', error.message);
+        Alert.alert('Erreur', 'Échec de la récupération des prévisions. Veuillez réessayer.');
+    }
+}
