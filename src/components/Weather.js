@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { View, TextInput, ScrollView, Text, Pressable } from 'react-native';
-import { getWeather, getForecast } from '../services/api';
+import { getWeather, getHourlyForecast } from '../services/legacyApi';
 import { styles } from "../styles"
 import Button from "./Button"
 import {getMockWeather, getMockForecast} from "../tests/mockApi";
+import Line from "./Line"
 
 
 const Weather = () => {
@@ -13,7 +14,7 @@ const Weather = () => {
 
     const handleMeteo = async () => {
         await getWeather(city, setWeatherData, setForecastData);
-        await getForecast(city, setWeatherData, setForecastData);
+        await getHourlyForecast(city, setWeatherData, setForecastData);
     }
 
     const handleMockMeteo = () => {
@@ -22,7 +23,7 @@ const Weather = () => {
     }
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             <TextInput
                 style={styles.input}
                 placeholder="Entrez une ville..."
@@ -34,30 +35,42 @@ const Weather = () => {
             <View>
 
             </View>
+            <View style={[styles.box, styles.actual]}>
+                <Text style={[styles.text, styles.boxTitle]}>Actuellement</Text>
+                {weatherData && (
+                    <View style={styles.scrollView}>
+                        <Text style={styles.text}>{weatherData.temperature}°C - {weatherData.description}</Text>
+                    </View>
+                )}
+            </View>
             <View style={styles.meteoDisplay}>
-                <View style={[styles.meteoBox, styles.now]}>
-                    {weatherData && (
-                        <ScrollView style={styles.scrollView}>
-                            <Text style={styles.text}>Température: {weatherData.temperature}°C</Text>
-                            <Text style={styles.text}>Description: {weatherData.description}</Text>
-                        </ScrollView>
-                    )}
-                </View>
-                <View style={[styles.meteoBox, styles.forecasts]}>
+
+                <View style={[styles.box, styles.forecasts, styles.hours]}>
+                    <Text style={[styles.text, styles.boxTitle]}>Journée</Text>
                     {forecastData && forecastData.length >  0 && (
-                        <ScrollView style={styles.scrollView}>
+                        <View style={styles.scrollView}>
                             {forecastData.map((item, index) => (
                                 <View key={index}>
-                                    <Text style={styles.text}>Heure: {new Date(item.dt *  1000).toLocaleTimeString()}</Text>
-                                    <Text style={styles.text}>Température: {item.main.temp}°C</Text>
-                                    <Text style={styles.text}>Description: {item.weather[0].description}</Text>
+                                    <Text style={styles.text}>{new Date(item.dt *  1000).toLocaleTimeString()}</Text>
+                                    <Text style={styles.text}>{item.main.temp}°C - {item.weather[0].description}</Text>
+                                    {index !== forecastData.length - 1 && (
+                                        <Line/>
+                                    )}
                                 </View>
                             ))}
-                        </ScrollView>
+                        </View>
+                    )}
+                </View>
+                <View style={[styles.box, styles.forecasts, styles.days]}>
+                    <Text style={[styles.text, styles.boxTitle]}>Jours prochains</Text>
+                    {weatherData && (
+                        <View style={styles.scrollView}>
+                            <Text style={styles.text}>{weatherData.temperature}°C - {weatherData.description}</Text>
+                        </View>
                     )}
                 </View>
             </View>
-        </View>
+        </ScrollView>
     );
 };
 
