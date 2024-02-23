@@ -2,15 +2,17 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
     container: {
-        flex:  1,
+        marginTop: "auto",
         justifyContent: 'center',
         paddingHorizontal:  10,
+        marginBottom: "auto"
     },
     input: {
         height:  40,
         borderColor: 'gray',
         borderWidth:  2,
         marginBottom:  5,
+        marginTop: 10,
         paddingLeft:  10,
         backgroundColor: "#3E8989",
         borderRadius: 15,
@@ -34,7 +36,7 @@ export const styles = StyleSheet.create({
     },
     box: {
         backgroundColor: "#3E8989",
-        width: 170,
+        width: 300,
         textAlign: "center",
         borderColor: 'gray',
         borderWidth:  2,
@@ -48,13 +50,16 @@ export const styles = StyleSheet.create({
         marginTop: 10
     },
     forecasts: {
-        height: 290,
+        minHeight: 200,
+        marginLeft: "auto",
+        marginRight: "auto",
+        marginBottom: 10
     },
     hours: {
-        marginLeft: "auto",
+
     },
     days: {
-        marginRight: "auto",
+
     },
     scrollView: {
         display: "flex",
