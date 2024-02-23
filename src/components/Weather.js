@@ -3,23 +3,26 @@ import { View, TextInput, ScrollView, Text, Pressable } from 'react-native';
 import { getWeather, getHourlyForecast } from '../services/legacyApi';
 import { styles } from "../styles"
 import Button from "./Button"
-import {getMockWeather, getMockForecast} from "../tests/mockApi";
+import {getMockFill} from "../tests/mockApi";
 import Line from "./Line"
+import {getRawData, fillContent} from "../services/openMeteoApi";
+import {getCoordinates} from "../services/geocodingApi";
 
 
 const Weather = () => {
     const [city, setCity] = useState('');
     const [weatherData, setWeatherData] = useState(null);
-    const [forecastData, setForecastData] = useState([]);
+    const [dailyData, setDailyData] = useState([]);
+    const [hourlyData, setHourlyData] = useState([])
 
     const handleMeteo = async () => {
-        await getWeather(city, setWeatherData, setForecastData);
-        await getHourlyForecast(city, setWeatherData, setForecastData);
+        let coordinates = await getCoordinates(city);
+        let data = await getRawData(coordinates[0], coordinates[1])
+        fillContent(data, setWeatherData, setDailyData, setHourlyData);
     }
 
-    const handleMockMeteo = () => {
-        getMockWeather(setWeatherData);
-        getMockForecast(setForecastData);
+    const handleMockMeteo = async () => {
+        getMockFill(setWeatherData, setHourlyData, setDailyData)
     }
 
     return (
@@ -43,17 +46,18 @@ const Weather = () => {
                     </View>
                 )}
             </View>
-            <View style={styles.meteoDisplay}>
 
                 <View style={[styles.box, styles.forecasts, styles.hours]}>
                     <Text style={[styles.text, styles.boxTitle]}>Journée</Text>
-                    {forecastData && forecastData.length >  0 && (
+                    {hourlyData && hourlyData.length >  0 && (
                         <View style={styles.scrollView}>
-                            {forecastData.map((item, index) => (
+                            {hourlyData.map((item, index) => (
                                 <View key={index}>
-                                    <Text style={styles.text}>{new Date(item.dt *  1000).toLocaleTimeString()}</Text>
-                                    <Text style={styles.text}>{item.main.temp}°C - {item.weather[0].description}</Text>
-                                    {index !== forecastData.length - 1 && (
+                                    <Text style={styles.text}>{new Date(item.time*1000).toLocaleTimeString()}</Text>
+                                    <Text style={styles.text}>{item.temp}°C - {item.weather}</Text>
+                                    <Text style={styles.text}>Précipitations : {item.precipitation}mm (Proba : {item.precipitation_probability}%)</Text>
+                                    <Text style={styles.text}>Vent : {item.wind_speed} km/h - {item.wind_direction}°</Text>
+                                    {index !== hourlyData.length - 1 && (
                                         <Line/>
                                     )}
                                 </View>
@@ -63,13 +67,22 @@ const Weather = () => {
                 </View>
                 <View style={[styles.box, styles.forecasts, styles.days]}>
                     <Text style={[styles.text, styles.boxTitle]}>Jours prochains</Text>
-                    {weatherData && (
+                    {dailyData && dailyData.length >  0 && (
                         <View style={styles.scrollView}>
-                            <Text style={styles.text}>{weatherData.temperature}°C - {weatherData.description}</Text>
+                            {dailyData.map((item, index) => (
+                                <View key={index}>
+                                    <Text style={styles.text}>{new Date(item.time*1000).toLocaleDateString()}</Text>
+                                    <Text style={styles.text}>{item.min_temp}°C à {item.max_temp}°C - {item.weather}</Text>
+                                    <Text style={styles.text}>Précipitations : {item.precipitation}mm (Proba : {item.precipitation_probability}%)</Text>
+                                    <Text style={styles.text}>Vent : {item.wind_speed} km/h - {item.wind_direction}°</Text>
+                                    {index !== dailyData.length - 1 && (
+                                        <Line/>
+                                    )}
+                                </View>
+                            ))}
                         </View>
                     )}
                 </View>
-            </View>
         </ScrollView>
     );
 };

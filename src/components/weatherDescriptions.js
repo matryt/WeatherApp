@@ -1,4 +1,4 @@
-const descriptions = {
+export const descriptions = {
     "0":{
         "description":"Ensoleillé",
         "image":"http://openweathermap.org/img/wn/01d@2x.png"
