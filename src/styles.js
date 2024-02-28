@@ -1,6 +1,12 @@
 import { StyleSheet } from "react-native";
+import {QuattrocentoSans_400Regular} from "@expo-google-fonts/quattrocento-sans";
+import {Oswald_600SemiBold} from "@expo-google-fonts/oswald";
 
 export const styles = StyleSheet.create({
+    app: {
+        flex: 1,
+        paddingVertical: 10
+    },
     container: {
         marginTop: "auto",
         justifyContent: 'center',
@@ -43,7 +49,7 @@ export const styles = StyleSheet.create({
         borderRadius: 10
     },
     actual: {
-        height: 70,
+        minHeight: 90,
         marginLeft: "auto",
         marginRight: "auto",
         marginBottom: 10,
@@ -53,12 +59,7 @@ export const styles = StyleSheet.create({
         minHeight: 200,
         marginLeft: "auto",
         marginRight: "auto",
-        marginBottom: 10
-    },
-    hours: {
-
-    },
-    days: {
+        marginBottom: 10,
 
     },
     scrollView: {
@@ -89,4 +90,17 @@ export const styles = StyleSheet.create({
         minHeight: 15,
         maxHeight: 20
     },
+    verticalText: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    letter: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 1,
+    },
+    item: {
+        display: "flex",
+        flexDirection: "row"
+    }
 });

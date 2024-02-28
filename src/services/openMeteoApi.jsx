@@ -3,7 +3,7 @@ import {descriptions} from "../components/weatherDescriptions"
 
 export const getRawData = async (latitude, longitude) => {
     try {
-        const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,uv_index&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max,wind_direction_10m_dominant&timeformat=unixtime&timezone=auto`;
+        const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,precipitation,weather_code,wind_speed_10m,wind_direction_10m&hourly=temperature_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m,wind_direction_10m,uv_index&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max,precipitation_sum,wind_speed_10m_max,wind_direction_10m_dominant&timeformat=unixtime&timezone=auto`;
         const response = await fetch(apiUrl);
         const data = await response.json();
         if (data.length === 1) {
@@ -16,25 +16,36 @@ export const getRawData = async (latitude, longitude) => {
     }
 }
 
+const getCurrentWeather = (data) => {
+    let currentData = data.current;
+    return {
+        "temp":currentData.temperature_2m,
+        "precipitation": currentData.precipitation,
+        "weather": getWeatherDescription(currentData.weather_code),
+        "wind_speed": currentData.wind_speed_10m,
+        "wind_direction": getWindDirection(currentData.wind_direction_10m),
+        "UV_index": currentData.uv_index,
+        "time": currentData.time
+    }
+}
+
 const getHourlyForecast = (data) => {
     let hourlyData = data.hourly;
     let result = [];
-    let currentHour = new Date().getTime() / 1000;
     let index = 0;
-    while (hourlyData.time[index] < currentHour) {
+    while (hourlyData.time[index] < data.current.time) {
         index++;
     }
     for (let i = index; i < 24; i++) {
         let values = {"temp":hourlyData.temperature_2m[i],
-            "humidity":hourlyData.relative_humidity_2m[i],
             "precipitation_prob":hourlyData.precipitation_probability[i],
             "precipitation": hourlyData.precipitation[i],
             "weather": getWeatherDescription(hourlyData.weather_code[i]),
-            "pressure": hourlyData.surface_pressure[i],
             "wind_speed": hourlyData.wind_speed_10m[i],
-            "wind_direction": hourlyData.wind_direction_10m[i],
+            "wind_direction": getWindDirection(hourlyData.wind_direction_10m[i]),
             "UV_index": hourlyData.uv_index[i],
-            "time": hourlyData.time[i]
+            "time": hourlyData.time[i],
+            "timezone": data.timezone
         }
         result.push(values);
     }
@@ -44,18 +55,16 @@ const getHourlyForecast = (data) => {
 const getDailyForecast = (data) => {
     let dailyData = data.daily;
     let result = [];
-    let currentHour = new Date().getTime() / 1000;
     for (let i = 1; i < 7; i++) {
         let values = {
             "precipitation": dailyData.precipitation_sum[i],
-            "sunrise": dailyData.sunrise[i],
-            "sunset": dailyData.sunset[i],
             "min_temp": dailyData.temperature_2m_min[i],
             "max_temp": dailyData.temperature_2m_max[i],
             "weather": getWeatherDescription(dailyData.weather_code[i]),
-            "wind_direction": dailyData.wind_direction_10m_dominant[i],
+            "wind_direction": getWindDirection(dailyData.wind_direction_10m_dominant[i]),
             "wind_speed": dailyData.wind_speed_10m_max[i],
-            "time": dailyData.time[i]
+            "time": dailyData.time[i],
+            "timezone": data.timezone
         }
         result.push(values);
     }
@@ -63,12 +72,22 @@ const getDailyForecast = (data) => {
 }
 
 const getWeatherDescription = (code) => {
-    console.log(code.toString());
-    console.log(descriptions);
     return descriptions[code.toString()]["description"];
 }
 
+const getWindDirection = (angle) => {
+    if (angle < 45) return "N";
+    if (angle < 90) return "NE";
+    if (angle < 135) return "E";
+    if (angle < 180) return "SE";
+    if (angle < 225) return "S";
+    if (angle < 270) return "SO";
+    if (angle < 315) return "O";
+    return "NO";
+}
+
 export const fillContent = (data, setWeatherData, setDailyData, setHourlyData) => {
+    setWeatherData(getCurrentWeather(data));
     setHourlyData(getHourlyForecast(data));
     setDailyData(getDailyForecast(data));
 
