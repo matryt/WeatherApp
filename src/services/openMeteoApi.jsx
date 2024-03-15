@@ -19,10 +19,10 @@ export const getRawData = async (latitude, longitude) => {
 const getCurrentWeather = (data) => {
     let currentData = data.current;
     return {
-        "temp":currentData.temperature_2m,
-        "precipitation": currentData.precipitation,
+        "temp": Math.round(currentData.temperature_2m),
+        "precipitation": Math.round(currentData.precipitation),
         "weather": getWeatherDescription(currentData.weather_code),
-        "wind_speed": currentData.wind_speed_10m,
+        "wind_speed": Math.round(currentData.wind_speed_10m),
         "wind_direction": getWindDirection(currentData.wind_direction_10m),
         "UV_index": currentData.uv_index,
         "time": currentData.time
@@ -37,15 +37,16 @@ const getHourlyForecast = (data) => {
         index++;
     }
     for (let i = index; i < 24; i++) {
-        let values = {"temp":hourlyData.temperature_2m[i],
+        let values = {"temp":Math.round(hourlyData.temperature_2m[i]),
             "precipitation_prob":hourlyData.precipitation_probability[i],
-            "precipitation": hourlyData.precipitation[i],
+            "precipitation": Math.round(hourlyData.precipitation[i]),
             "weather": getWeatherDescription(hourlyData.weather_code[i]),
-            "wind_speed": hourlyData.wind_speed_10m[i],
+            "wind_speed": Math.round(hourlyData.wind_speed_10m[i]),
             "wind_direction": getWindDirection(hourlyData.wind_direction_10m[i]),
             "UV_index": hourlyData.uv_index[i],
             "time": hourlyData.time[i],
-            "timezone": data.timezone
+            "timezone": data.timezone,
+            "weatherImage": getWeatherImage(hourlyData.weather_code[i])
         }
         result.push(values);
     }
@@ -57,14 +58,15 @@ const getDailyForecast = (data) => {
     let result = [];
     for (let i = 1; i < 7; i++) {
         let values = {
-            "precipitation": dailyData.precipitation_sum[i],
-            "min_temp": dailyData.temperature_2m_min[i],
-            "max_temp": dailyData.temperature_2m_max[i],
+            "precipitation": Math.round(dailyData.precipitation_sum[i]),
+            "min_temp": Math.round(dailyData.temperature_2m_min[i]),
+            "max_temp": Math.round(dailyData.temperature_2m_max[i]),
             "weather": getWeatherDescription(dailyData.weather_code[i]),
             "wind_direction": getWindDirection(dailyData.wind_direction_10m_dominant[i]),
-            "wind_speed": dailyData.wind_speed_10m_max[i],
+            "wind_speed": Math.round(dailyData.wind_speed_10m_max[i]),
             "time": dailyData.time[i],
-            "timezone": data.timezone
+            "timezone": data.timezone,
+            "weatherImage": getWeatherImage(dailyData.weather_code[i])
         }
         result.push(values);
     }
@@ -73,6 +75,10 @@ const getDailyForecast = (data) => {
 
 const getWeatherDescription = (code) => {
     return descriptions[code.toString()]["description"];
+}
+
+const getWeatherImage = (code) => {
+    return descriptions[code.toString()]["image"];
 }
 
 const getWindDirection = (angle) => {
