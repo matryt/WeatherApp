@@ -16,7 +16,7 @@ export const DisplayTime = ({ time }) => {
 export const DisplayDate = ({ date }) => {
     const [day, month] = date.split('/');
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, styles.infoContainer]}>
             <Text style={styles.text}>{day}</Text>
             <Text style={styles.text}>{month}</Text>
         </View>

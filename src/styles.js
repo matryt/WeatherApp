@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
         textAlign: "center",
         margin: "auto",
         fontFamily: "QuattrocentoSans_400Regular",
-        color: "white"
+        color: "white",
     },
     boxTitle: {
         fontSize: 25,
@@ -42,7 +42,7 @@ export const styles = StyleSheet.create({
     },
     box: {
         backgroundColor: "#3E8989",
-        width: 300,
+        width: 320,
         textAlign: "center",
         borderColor: 'gray',
         borderWidth:  2,
@@ -102,5 +102,82 @@ export const styles = StyleSheet.create({
     item: {
         display: "flex",
         flexDirection: "row"
+    },
+    weatherImage: {
+        width: 40,
+        height: 40,
+        margin: 5,
+        marginRight: 10
+    },
+    infoContainer: {
+        width: 25,
+        marginLeft: 5,
+        marginRight: 5
+    },
+    meteoText: {
+        width: "fit-content",
+        margin: 1
+    },
+    arrowContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 100,
+        width: 100,
+    },
+    arrow: {
+        borderBottomColor: 'black',
+        borderBottomWidth: 2,
+        borderLeftColor: 'black',
+        borderLeftWidth: 2,
+        height: 0,
+        width: 0,
+        borderTopLeftRadius: 50,
+        borderTopRightRadius: 50,
+        borderBottomRightRadius: 50,
+        borderBottomLeftRadius: 50,
+        transform: [{ rotate: '45deg' }],
+    },
+    windContainer: {
+        width: 75,
+        height: 60,
+        marginRight: 10
+    },
+    tempContainer: {
+        display: "flex",
+        flexDirection: "row",
+        height: 60,
+        width: 70,
+        marginRight: 10
+    },
+    windImage: {
+        height: 25,
+        width: 25,
+    },
+    tempImage: {
+        height:55,
+        width: 20,
+        marginRight: 5
+    },
+    windText: {
+        margin: 0,
+        width: "fit-content",
+    },
+    maxText: {
+        margin: 0,
+        paddingEnd: 2,
+        width: "fit-content",
+    },
+    precipText: {
+        width: "fit-content",
+        margin: 0
+    },
+    precipImage: {
+        height: 35,
+        width: 25,
+        marginLeft: 6
+    },
+    precipContainer: {
+        width: 50,
+        height: 60
     }
 });
