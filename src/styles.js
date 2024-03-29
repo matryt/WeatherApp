@@ -179,5 +179,25 @@ export const styles = StyleSheet.create({
     precipContainer: {
         width: 50,
         height: 60
+    },
+    dropdown: {
+        backgroundColor: "#3E8989",
+        padding: 10,
+        margin: 10
+    },
+    searchCity: {
+        backgroundColor: "#3E8989",
+        padding: 10,
+        margin: 10
+    },
+    cityBoxes: {
+        minHeight: 50,
+        marginHorizontal: "auto",
+        marginTop: 20
+    },
+    cityBox: {
+        display: "flex",
+        flexDirection: "row",
+        gap: 10
     }
 });

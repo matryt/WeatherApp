@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import { View, TextInput, ScrollView, Text, Image } from 'react-native';
 import {DisplayDate, DisplayTime} from "./VerticalText"
 import { styles } from "../styles"
@@ -11,10 +11,13 @@ import {useFonts} from "expo-font";
 import {QuattrocentoSans_400Regular} from "@expo-google-fonts/quattrocento-sans";
 import {Oswald_600SemiBold} from "@expo-google-fonts/oswald";
 import {WindVisual, TemperatureVisual, PrecipitationsVisual} from "./Visuals";
+import CityContext from "../services/CityContext";
+import SelectDropdown from "react-native-select-dropdown"
 
 
 const Weather = () => {
-    const [city, setCity] = useState('');
+    const { cities } = useContext(CityContext);
+    const [selectedCity, setSelectedCity] = useState('');
     const [weatherData, setWeatherData] = useState(null);
     const [dailyData, setDailyData] = useState([]);
     const [hourlyData, setHourlyData] = useState([]);
@@ -24,22 +27,45 @@ const Weather = () => {
     })
 
     const handleMeteo = async () => {
-        let coordinates = await getCoordinates(city);
-        fillContent(await getRawData(coordinates[0], coordinates[1]), setWeatherData, setDailyData, setHourlyData);
-    }
+        if (selectedCity != null) {
+            fillContent(await getRawData(selectedCity.lat, selectedCity.lat), setWeatherData, setDailyData, setHourlyData);
+                    }
+        }
 
     const handleMockMeteo = async () => {
         getMockFill(setWeatherData, setHourlyData, setDailyData)
     }
 
+    const handleCitySelection = (city) => {
+        setSelectedCity({ ...city });
+    };
+
+    console.log("Coucou ici " + cities);
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <TextInput
-                style={styles.input}
-                placeholder="Entrez une ville..."
-                value={city}
-                onChangeText={setCity}
-            />
+            <View style={styles.dropdown}>
+                <SelectDropdown
+                    data={cities}
+                    onSelect={(selectedCity) => handleCitySelection(selectedCity)}
+                    closeMenuOnSelect={false}
+                    renderButton={(selectedItem) => (
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text style={[styles.text, {margin: 0}]}>{selectedItem ? selectedItem.nom : 'Sélectionnez une ville'}</Text>
+                        </View>
+                    )}
+                    renderItem={(item, index, isSelected) => (
+                        <>
+                        <View style={{ padding: 10, ...(isSelected && {backgroundColor: '#b2f7ef'}) }}>
+                            <Text style={[styles.text, {margin: 0, ...(isSelected && {color: '#3e8989', fontWeight: "bold",})}]}>{item.nom}</Text>
+                        </View>
+                        <Line />
+                        </>
+                    )}
+                    dropdownStyle={styles.dropdown}
+
+                />
+            </View>
             <Button onPress={handleMeteo} title="Rechercher..."></Button>
             {__DEV__ && (<Button onPress={handleMockMeteo} title="Test"></Button>)}
             <View>
