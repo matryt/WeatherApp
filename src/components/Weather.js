@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { View, TextInput, ScrollView, Text, Image } from 'react-native';
 import {DisplayDate, DisplayTime} from "./VerticalText"
 import { styles } from "../styles"
@@ -11,12 +11,13 @@ import {useFonts} from "expo-font";
 import {QuattrocentoSans_400Regular} from "@expo-google-fonts/quattrocento-sans";
 import {Oswald_600SemiBold} from "@expo-google-fonts/oswald";
 import {WindVisual, TemperatureVisual, PrecipitationsVisual} from "./Visuals";
-import CityContext from "../services/CityContext";
 import SelectDropdown from "react-native-select-dropdown"
+import {storage} from "../services/MMKVCities";
 
 
 const Weather = () => {
-    const { cities } = useContext(CityContext);
+    const [cities, setCities] = useState([]);
+    //let cities = JSON.parse(storage.getString("cities"));
     const [selectedCity, setSelectedCity] = useState('');
     const [weatherData, setWeatherData] = useState(null);
     const [dailyData, setDailyData] = useState([]);
@@ -24,7 +25,25 @@ const Weather = () => {
     const fontsLoaded = useFonts({
         QuattrocentoSans_400Regular,
         Oswald_600SemiBold
-    })
+    });
+
+    useEffect(() => {
+        // Initialisez les villes ici
+        setCities(JSON.parse(storage.getString("cities")));
+
+        // Ajoutez un écouteur pour la clé des villes
+        const listener = storage.addOnValueChangedListener((changedKey) => {
+            if (changedKey === "cities") {
+                console.log("Key changed !")
+                setCities(JSON.parse(storage.getString(changedKey)));
+            }
+        });
+
+        // N'oubliez pas de supprimer l'écouteur lorsque le composant est démonté
+        return () => {
+            listener.remove();
+        };
+    }, []);
 
     const handleMeteo = async () => {
         if (selectedCity != null) {
@@ -40,7 +59,6 @@ const Weather = () => {
         setSelectedCity({ ...city });
     };
 
-    console.log("Coucou ici " + cities);
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -87,8 +105,8 @@ const Weather = () => {
                     {hourlyData && hourlyData.length >  0 && (
                         <View style={styles.scrollView}>
                             {hourlyData.map((item, index) => (
-                                <View>
-                                    <View style={styles.item} key={index}>
+                                <View key={index}>
+                                    <View style={styles.item}>
                                         <DisplayTime time={new Date(item.time*1000).toLocaleTimeString('fr-FR', { timeZone: hourlyData[0].timezone})} />
                                         <Image source={item.weatherImage} style={styles.weatherImage} />
                                         <WindVisual windDirection={item.wind_direction} windSpeed={item.wind_speed}/>
@@ -112,8 +130,8 @@ const Weather = () => {
                     {dailyData && dailyData.length >  0 && (
                         <View style={styles.scrollView}>
                             {dailyData.map((item, index) => (
-                                <View>
-                                    <View style={styles.item} key={index}>
+                                <View key={index}>
+                                    <View style={styles.item} >
                                         <DisplayDate date={new Date(item.time*1000).toLocaleDateString('fr-FR', { timeZone: dailyData.timezone, day: "2-digit", month:"2-digit"} )}></DisplayDate>
                                         <Image source={item.weatherImage} style={styles.weatherImage} />
                                         <WindVisual windDirection={item.wind_direction} windSpeed={item.wind_speed}/>
