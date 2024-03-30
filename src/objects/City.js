@@ -18,7 +18,6 @@ export class City {
         if (coords != null) {
             this.lat = coords[0];
             this.long = coords[1];
-            console.log(coords)
         }
         else {
             throw new Error("City unknown !");
