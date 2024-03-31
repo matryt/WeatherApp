@@ -5,14 +5,16 @@ import { styles } from "../styles"
 import Button from "./Button"
 import {getMockFill} from "../tests/mockApi";
 import Line from "./Line"
-import {getRawData, fillContent} from "../services/openMeteoApi";
+import {getRawData} from "../services/openMeteoApi";
 import {getCoordinates} from "../services/geocodingApi";
 import {useFonts} from "expo-font";
 import {QuattrocentoSans_400Regular} from "@expo-google-fonts/quattrocento-sans";
 import {Oswald_600SemiBold} from "@expo-google-fonts/oswald";
 import {WindVisual, TemperatureVisual, PrecipitationsVisual} from "./Visuals";
 import SelectDropdown from "react-native-select-dropdown"
-import {storage} from "../services/MMKVCities";
+import {storage} from "../modules/MMKVCities";
+import {fillContent} from "../modules/processData"
+import {getSunTimes} from "../services/sunApi";
 
 
 const Weather = () => {
@@ -47,7 +49,7 @@ const Weather = () => {
 
     const handleMeteo = async () => {
         if (selectedCity != null) {
-            fillContent(await getRawData(selectedCity.lat, selectedCity.lat), setWeatherData, setDailyData, setHourlyData);
+            fillContent(await getRawData(selectedCity), await getSunTimes(selectedCity), setWeatherData, setDailyData, setHourlyData);
                     }
         }
 
@@ -111,9 +113,8 @@ const Weather = () => {
                                         <Image source={item.weatherImage} style={styles.weatherImage} />
                                         <WindVisual windDirection={item.wind_direction} windSpeed={item.wind_speed}/>
                                         <TemperatureVisual minTemp={item.temp} maxTemp={""} />
-                                        <View style={{width: 250}}>
-                                            <Text style={styles.text}>{item.temp}°C - Vent : {item.wind_speed} km/h ({item.wind_direction}) </Text>
-                                            <Text style={styles.text}>Précip. : {item.precipitation}mm (Proba : {item.precipitation_prob}%)</Text>
+                                        <PrecipitationsVisual precipQuantity={item.precipitation} prob={item.precipitation_prob}/>
+                                        <View style={{width: 200}}>
                                         </View>
 
                                     </View>
@@ -136,7 +137,7 @@ const Weather = () => {
                                         <Image source={item.weatherImage} style={styles.weatherImage} />
                                         <WindVisual windDirection={item.wind_direction} windSpeed={item.wind_speed}/>
                                         <TemperatureVisual minTemp={item.min_temp} maxTemp={item.max_temp} />
-                                        <PrecipitationsVisual precipQuantity={item.precipitation} />
+                                        <PrecipitationsVisual precipQuantity={item.precipitation}/>
                                         <View style={{width: 200}}>
                                         </View>
                                     </View>

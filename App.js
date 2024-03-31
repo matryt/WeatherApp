@@ -10,7 +10,7 @@ import CityManagement from './src/components/CityManagement';
 import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {faCloudMoonRain} from "@fortawesome/free-solid-svg-icons/faCloudMoonRain";
 import {faMountainCity} from "@fortawesome/free-solid-svg-icons/faMountainCity";
-import initStorage from "./src/services/MMKVCities"
+import initStorage from "./src/modules/MMKVCities"
 
 const Tab = createBottomTabNavigator();
 

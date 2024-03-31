@@ -101,13 +101,13 @@ export const styles = StyleSheet.create({
     },
     item: {
         display: "flex",
-        flexDirection: "row"
+        flexDirection: "row",
+        height: 70
     },
     weatherImage: {
         width: 40,
         height: 40,
-        margin: 5,
-        marginRight: 10
+        marginVertical: "auto"
     },
     infoContainer: {
         width: 25,
@@ -124,43 +124,39 @@ export const styles = StyleSheet.create({
         height: 100,
         width: 100,
     },
-    arrow: {
-        borderBottomColor: 'black',
-        borderBottomWidth: 2,
-        borderLeftColor: 'black',
-        borderLeftWidth: 2,
-        height: 0,
-        width: 0,
-        borderTopLeftRadius: 50,
-        borderTopRightRadius: 50,
-        borderBottomRightRadius: 50,
-        borderBottomLeftRadius: 50,
-        transform: [{ rotate: '45deg' }],
+    flexContainer: {
+        display: "flex",
+        flexDirection: "row",
+        margin: "auto",
     },
     windContainer: {
-        width: 75,
+        width: 70,
         height: 60,
-        marginRight: 10
+        marginHorizontal: 5
     },
     tempContainer: {
         display: "flex",
         flexDirection: "row",
-        height: 60,
-        width: 70,
-        marginRight: 10
+        height: 65,
+        width: 55,
+        marginRight: 5
     },
     windImage: {
         height: 25,
         width: 25,
+        margin: "auto",
     },
     tempImage: {
-        height:55,
+        height:60,
         width: 20,
-        marginRight: 5
+        marginRight: 3
     },
     windText: {
+        marginHorizontal: 0,
+        marginLeft: 5
+    },
+    tempText: {
         margin: 0,
-        width: "fit-content",
     },
     maxText: {
         margin: 0,
@@ -169,15 +165,16 @@ export const styles = StyleSheet.create({
     },
     precipText: {
         width: "fit-content",
-        margin: 0
+        margin: "auto",
+        height: "fit-content",
+        marginLeft: 5
     },
     precipImage: {
         height: 35,
         width: 25,
-        marginLeft: 6
     },
     precipContainer: {
-        width: 50,
+        width: 90,
         height: 60
     },
     dropdown: {

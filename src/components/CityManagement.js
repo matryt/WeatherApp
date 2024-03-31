@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {View, Text, TextInput, FlatList, Alert, Pressable} from 'react-native';
 import { City } from "../objects/City"
 import {styles} from "../styles";
@@ -6,7 +6,7 @@ import Button from "./Button"
 import Line from "./Line";
 import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {faSquareMinus} from "@fortawesome/free-solid-svg-icons/faSquareMinus";
-import {storage} from "../services/MMKVCities";
+import {storage} from "../modules/MMKVCities";
 
 const CityManagement = () => {
     const [cities, setCities] = useState(JSON.parse(storage.getString("cities")));
