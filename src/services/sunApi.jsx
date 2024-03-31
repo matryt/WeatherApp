@@ -4,7 +4,7 @@ const apiKey = "00031a65b49791c459322c0656fc6202"
 
 export const getSunTimes = async (city) => {
     try {
-        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&long=${city.long}&appid=${apiKey}&lang=fr`;
+        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.long}&appid=${apiKey}&lang=fr`;
 
         const response = await fetch(apiUrl);
         const data = await response.json();
